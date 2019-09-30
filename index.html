@@ -1,0 +1,70 @@
+<html>
+
+<head>
+
+
+    <link rel="stylesheet" href="dist/css/cronus-calendar.css">
+    <script src="dist/js/cronus-calendar.js"></script>
+</head>
+
+<body>
+    <section style="width: 300px">
+        <cronus-calendar></cronus-calendar>
+    </section>
+
+
+    <script>
+        let cgmDates = ['2019-09-12', '2019-10-01'].map(s => new Date(s));
+        let fitbitDates = ['2019-09-12', '2019-09-13'].map(s => new Date(s));
+        let cal = document.getElementsByTagName('cronus-calendar').item(0);
+
+
+        // Callback that listens to when the calendar is populating dates
+        // Expects an array of strings containing colors
+        // Can provide hex or a standard color value 
+        cal.ongeneratedots = (date) => {
+            let dots = [];
+            let hasCGM      = cgmDates.some(_val => checkSameDay(date, _val));
+            let hasFitbit   = fitbitDates.some(_val => checkSameDay(date, _val));
+            
+            if (hasCGM) dots.push('purple');
+            if (hasFitbit) dots.push('green');
+
+            return dots;
+        }
+
+        // Month change event
+        // Called when next / prev button has been changed
+        cal.onmonthchange = (date) => {
+            console.log('MONTH CHANGED');
+            console.log(date)
+        }
+
+        // Date selected
+        // Called when a date is clicked
+        cal.ondateselected = (date) => {
+            console.log('DATE SELECTED');
+            console.log(date);
+        }
+
+        // INITIALIZE FUNCTION
+        // If date is not provided defaults to current date
+        cal.init(new Date());
+
+
+        function checkSameDay(ref, comp) {
+            let _ref = new Date(ref);
+            _ref.setHours(0, 0, 0, 0);
+            let _comp = new Date(comp);
+            _comp.setHours(0, 0, 0, 0);
+            var same =
+                _ref.getMonth() === _comp.getMonth() &&
+                _ref.getFullYear() === _comp.getFullYear() &&
+                _ref.getDate() === _comp.getDate();
+            return same;
+
+        }
+    </script>
+</body>
+
+</html>
