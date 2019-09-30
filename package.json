@@ -2,7 +2,8 @@
   "name": "helium-calendar",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/js/cronus-calendar.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch-ts": "nodemon --watch src/ --ext ts --exec \"npm-run-all ts-compile\"",
@@ -11,8 +12,8 @@
     "ts-compile": "webpack",
     "css-compile": "node-sass --output-style expanded --source-map true --source-map-contents true --precision 6 src/scss -o dist/css"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Daryl Clarino",
+  "license": "MIT",
   "devDependencies": {
     "node-sass": "^4.12.0",
     "nodemon": "^1.19.3",
