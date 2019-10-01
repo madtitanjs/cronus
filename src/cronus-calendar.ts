@@ -1,14 +1,14 @@
 import { DateHelper } from "./ts/date-helper";
-
 import { Chevron } from "./ts/chevron";
-
 import { Dot } from "./ts/dot";
+import { DateGridItem } from "./ts/interface";
 
 export class CronusCalendar extends HTMLElement {
     date: Date = new Date();
     ongeneratedots = (date: Date): string[] => [];
     onmonthchange = (date: Date) => { };
     ondateselected = (date: Date) => { };
+    date_grid_items: DateGridItem[] = [];
     static get observedAttributes() { return ['date']; }
 
     constructor() {
@@ -116,19 +116,15 @@ export class CronusCalendar extends HTMLElement {
         _cloneDate.setDate(1);
         // get offset in the calendar
         let firstDayNum = _cloneDate.getDay() + 1;
+        // clear date grid items
+        this.date_grid_items.length = 0;
         while (_iterateDays++ < _numDays) {
             let date_container = document.createElement('div');
             let date_label = document.createElement('span');
             date_container.classList.add('date-grid-item');
             // ATTACH LISTENER
             date_container.onclick = () => {
-                let childLen = date_grid.children.length;
-                while(childLen--) {
-                    let childGrid = date_grid.children.item(childLen) as HTMLElement;
-                    childGrid.classList.remove('selected');
-                }
-                date_container.classList.add('selected');
-                this.ondateselected(_date_assoc);
+                this.renderSelects({element: date_container, date: _date_assoc});
             }
 
             date_label.textContent = `${_iterateDays}`;
@@ -147,6 +143,9 @@ export class CronusCalendar extends HTMLElement {
             }
             date_container.appendChild(date_label);
             date_container.appendChild(dot_container);
+
+            // Push date container to date grid item array
+            this.date_grid_items.push({element: date_container, date: _date_assoc});
             date_grid.appendChild(date_container);
 
 
@@ -168,10 +167,31 @@ export class CronusCalendar extends HTMLElement {
         this.onmonthchange(this.date);
     }
 
+    select(date: Date | string) {
+        let _date = new Date(date);
+        let item = this.date_grid_items.find(s => DateHelper.checkSameDay(s.date, _date));
+        if(typeof item !== 'undefined') {
+            this.renderSelects(item);
+        } else {
+            console.error('Date selected is not rendered');
+        }
+    }
+
     private adjustMonth(num: number) {
         let d = new Date(this.date);
         let _d = new Date(d.setMonth(d.getMonth() + num));
         this.init(_d);
+    }
+
+    private renderSelects(item: DateGridItem) {
+        let date_grid = document.createElement('section');
+        let childLen = date_grid.children.length;
+        while(childLen--) {
+            let childGrid = date_grid.children.item(childLen) as HTMLElement;
+            childGrid.classList.remove('selected');
+        }
+        item.element.classList.add('selected');
+        this.ondateselected(item.date);
     }
 
 }

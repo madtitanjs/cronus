@@ -14,6 +14,16 @@ export module DateHelper {
         return MONTHS[month];
     }
 
-
+    export function checkSameDay(ref: Date, comp: Date) {
+        let _ref = new Date(ref);
+        _ref.setHours(0, 0, 0, 0);
+        let _comp = new Date(comp);
+        _comp.setHours(0, 0, 0, 0);
+        var same =
+            _ref.getMonth() === _comp.getMonth() &&
+            _ref.getFullYear() === _comp.getFullYear() &&
+            _ref.getDate() === _comp.getDate();
+        return same;
+    }
 
 }

@@ -64,3 +64,6 @@
     }
 
 ```
+
+* ``init(date?: Date | string)``: Initializes the Calendar
+* ``select(date?: Date | string)``: Selects a date, also triggers ``ondateselected``
